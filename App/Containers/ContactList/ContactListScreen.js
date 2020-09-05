@@ -1,7 +1,8 @@
 import React from 'react'
-import { Text, View, ActivityIndicator, Image, PermissionsAndroid, FlatList, } from 'react-native'
-import { ListItem, SearchBar } from "react-native-elements";
+import { View, ActivityIndicator, PermissionsAndroid, FlatList, StyleSheet} from 'react-native'
+import { ListItem, SearchBar, Avatar } from "react-native-elements";
 import Contacts from 'react-native-contacts';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 /**
  * This is an example of a container component.
@@ -29,14 +30,16 @@ class ContactListScreen extends React.Component {
     this._fetchUser()
   }
 
+
   renderSeparator = () => {
     return (
       <View
         style={{
           height: 1,
-          width: "86%",
+          width: "90%",
           backgroundColor: "#CED0CE",
-          marginLeft: "14%"
+          marginLeft: "5%",
+          marginRight: "5%"
         }}
       />
     );
@@ -44,8 +47,8 @@ class ContactListScreen extends React.Component {
 
   renderHeader = () => {
     return <SearchBar placeholder="Search Here..." lightTheme round onChangeText={text => this.searchFilterFunction(text)}
-    autoCorrect={false}
-    value={this.state.value}/>;
+      autoCorrect={false}
+      value={this.state.value} />;
   };
 
   searchFilterFunction = text => {
@@ -85,25 +88,35 @@ class ContactListScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {/* <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}> */}
-          <FlatList
-            data={this.state.contacts}
-            renderItem={({ item }) => (
-              <ListItem
-                roundAvatar
-                title={item.displayName}
-                subtitle={item.phoneNumbers[0].number}
-                avatar={{ uri: item.thumbnailPath }}
-                containerStyle={{ borderBottomWidth: 0 }}
-              />
-            )}
-            keyExtractor={item => item.displayName}
-            ItemSeparatorComponent={this.renderSeparator}
-            ListHeaderComponent={this.renderHeader}
-          />
-        {/* </List> */}
+        <FlatList
+          data={this.state.contacts}
+          renderItem={({ item }) => (
+            <ListItem onPress={this.navigateToContactFrequency}>
+              <ListItem.Content style={styles.row}>
+                {item.hasThumbnail
+                  ? <Avatar rounded size="medium" source={{ uri: item.thumbnailPath }}/>
+                  : <Avatar rounded size="medium" title={ ((item.givenName).charAt(0)).toUpperCase()} overlayContainerStyle={{backgroundColor: item.avtarColor}} titleStyle={styles.title}/>
+                }
+                <View style={styles.addPad}>
+                  <ListItem.Title>{item.displayName}</ListItem.Title>
+                  <ListItem.Subtitle>{item.phoneNumbers[0].number}</ListItem.Subtitle>
+                </View>  
+                <View style={styles.alignRight}>
+                  <Icon name="angle-right" color="#778899" size={30}/>  
+                </View> 
+              </ListItem.Content>
+            </ListItem>
+          )}
+          keyExtractor={item => item.displayName}
+          ItemSeparatorComponent={this.renderSeparator}
+          ListHeaderComponent={this.renderHeader}
+        />
       </View>
     );
+  }
+
+  navigateToContactFrequency = () => {
+    this.props.navigation.navigate('ContactFrequency');
   }
 
   _fetchUser() {
@@ -122,6 +135,7 @@ class ContactListScreen extends React.Component {
               contacts: list
             });
             this.contactList = list;
+            this.setAvtarColor();
             console.log(JSON.stringify(this.contactList))
           }
         });
@@ -130,6 +144,38 @@ class ContactListScreen extends React.Component {
       console.log(err)
     }
   };
+
+  setAvtarColor() {
+    this.contactList.forEach(contact => {
+      contact.avtarColor = this.getRandomColor();
+    });
+  }
+  
+  getRandomColor() {
+    const colorPalette = ["#F08080", "#FFA500", "#BDB76B", "#8FBC8F"];
+    return colorPalette[Math.floor(Math.random()*colorPalette.length)];
+  }
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flex: 1,
+    flexDirection: "row",
+    borderBottomWidth: 0,
+    justifyContent: "flex-start"
+  },
+  addPad: {
+    paddingLeft: "5%"
+  },
+  title: {
+    margin: 5,
+    fontSize: 18,
+    fontWeight: "600",
+    color: "white"
+  },
+  alignRight: {
+    marginLeft: 'auto'
+  }
+});
 
 export default ContactListScreen

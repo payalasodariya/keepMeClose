@@ -2,7 +2,8 @@ import { createAppContainer, createStackNavigator } from 'react-navigation'
 
 import ContactListScreen from 'App/Containers/ContactList/ContactListScreen'
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen'
-
+import ContactFrequencyScreen from '../Containers/ContactFrequency/ContactFrequencyScreen'
+import { transitionConfig } from '../Theme/transitionConfig'
 /**
  * The root screen contains the application's navigation.
  *
@@ -16,10 +17,12 @@ const StackNavigator = createStackNavigator(
     // The main application screen is our "ExampleScreen". Feel free to replace it with your
     // own screen and remove the example.
     MainScreen: ContactListScreen,
+    ContactFrequency: ContactFrequencyScreen
   },
   {
     // By default the application will show the splash screen
     initialRouteName: 'SplashScreen',
+    transitionConfig,
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   }
