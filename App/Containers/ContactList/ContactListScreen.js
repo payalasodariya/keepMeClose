@@ -21,13 +21,13 @@ class ContactListScreen extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      datcontactsa: [],
+      contacts: [],
       error: null
     };
     this.contactList = [];
   }
-  componentDidMount() {
-    this._fetchUser()
+  async componentDidMount() {
+    await this._fetchUser()
   }
 
 
@@ -91,7 +91,7 @@ class ContactListScreen extends React.Component {
         <FlatList
           data={this.state.contacts}
           renderItem={({ item }) => (
-            <ListItem onPress={this.navigateToContactFrequency}>
+            <ListItem onPress={() => this.navigateToContactFrequency(item)}>
               <ListItem.Content style={styles.row}>
                 {item.hasThumbnail
                   ? <Avatar rounded size="medium" source={{ uri: item.thumbnailPath }}/>
@@ -107,7 +107,7 @@ class ContactListScreen extends React.Component {
               </ListItem.Content>
             </ListItem>
           )}
-          keyExtractor={item => item.displayName}
+          keyExtractor={(item, index) => {return index.toString();}}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
@@ -115,8 +115,11 @@ class ContactListScreen extends React.Component {
     );
   }
 
-  navigateToContactFrequency = () => {
-    this.props.navigation.navigate('ContactFrequency');
+  navigateToContactFrequency = (item) => {
+    console.log("item", JSON.stringify(item))
+    this.props.navigation.navigate('ContactFrequency', {
+      singleContactDetails: item,
+    });
   }
 
   _fetchUser() {
@@ -126,7 +129,7 @@ class ContactListScreen extends React.Component {
         message: 'This app would like to view your contacts.',
       }).then(() => {
         this.setState({ loading: true });
-        Contacts.getAll((err, list) => {
+        Contacts.getAll(async (err, list) => {
           if (err === 'denied') {
             this.setState({ error, loading: false });
           } else {
@@ -135,8 +138,9 @@ class ContactListScreen extends React.Component {
               contacts: list
             });
             this.contactList = list;
-            this.setAvtarColor();
-            console.log(JSON.stringify(this.contactList))
+            await this.setAvtarColor();
+            return this.contactList;
+            // console.log(JSON.stringify(this.contactList))
           }
         });
       });
@@ -146,8 +150,11 @@ class ContactListScreen extends React.Component {
   };
 
   setAvtarColor() {
-    this.contactList.forEach(contact => {
+    this.contactList.forEach((contact,index) => {
       contact.avtarColor = this.getRandomColor();
+      if ( contact.phoneNumbers.length === 0 ) {
+        this.contactList.splice(index, 1);
+      }
     });
   }
   

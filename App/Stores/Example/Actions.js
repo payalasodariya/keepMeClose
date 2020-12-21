@@ -19,6 +19,7 @@ import { createActions } from 'reduxsauce'
  * @see https://github.com/infinitered/reduxsauce#createactions
  */
 const { Types, Creators } = createActions({
+  _fetchUser: null,
   // Fetch user informations
   fetchUser: null,
   // The operation has started and is loading

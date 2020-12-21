@@ -3,11 +3,14 @@ import { Colors } from 'App/Theme'
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: Colors.primary,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    height: '100%'
+    // alignItems: 'center'
   },
-  logo: {
-    backgroundColor: Colors.black,
-    height: 70,
-    width: 70,
-  },
+  innerBundle: {
+    // width: 100%,
+    // top: 0,
+    // height:100
+  }
 })

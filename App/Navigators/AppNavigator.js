@@ -4,6 +4,9 @@ import ContactListScreen from 'App/Containers/ContactList/ContactListScreen'
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen'
 import ContactFrequencyScreen from '../Containers/ContactFrequency/ContactFrequencyScreen'
 import { transitionConfig } from '../Theme/transitionConfig'
+import TimeCaptureScreen from '../Containers/TimeCapture/TimeCaptureScreen'
+import DayCaptureScreen from '../Containers/DayCapture/DayCaptureScreen'
+import DateCaptureScreen from '../Containers/DateCapture/DateCaptureScreen'
 /**
  * The root screen contains the application's navigation.
  *
@@ -17,7 +20,10 @@ const StackNavigator = createStackNavigator(
     // The main application screen is our "ExampleScreen". Feel free to replace it with your
     // own screen and remove the example.
     MainScreen: ContactListScreen,
-    ContactFrequency: ContactFrequencyScreen
+    ContactFrequency: ContactFrequencyScreen,
+    TimeCapture: TimeCaptureScreen,
+    DayCapture: DayCaptureScreen,
+    DateCapture: DateCaptureScreen
   },
   {
     // By default the application will show the splash screen
